@@ -23,6 +23,15 @@ class NewEditableFuelSheetField: UIView {
 		self.textFieldText = textFieldText
 		
 		self.addSubview(editableField)
+		
+		// this was missing from the code in your question
+		configureAutoLayout()
+		
+		// so we can see the frames at run-time
+		self.backgroundColor = .red
+		
+		// set clipsToBounds
+		self.clipsToBounds = true
 	}
 	
 	required init?(coder: NSCoder) {
@@ -36,6 +45,11 @@ class NewEditableFuelSheetField: UIView {
 		let textField = UITextField()
 		textField.isEnabled = false
 		
+		// so we can see the frames at run-time
+		title.backgroundColor = .yellow
+		textField.backgroundColor = .green
+		//
+		
 		let stack = UIStackView(arrangedSubviews: [title, textField])
 		stack.axis = .vertical
 		stack.distribution = .fillEqually
@@ -46,7 +60,12 @@ class NewEditableFuelSheetField: UIView {
 	
 	private func configureAutoLayout() {
 		NSLayoutConstraint.activate([
-			editableField.heightAnchor.constraint(equalToConstant: 50)
+			editableField.heightAnchor.constraint(equalToConstant: 50),
+			
+			// constraints relative to superview (self)
+			editableField.topAnchor.constraint(equalTo: topAnchor),
+			editableField.leadingAnchor.constraint(equalTo: leadingAnchor),
+			editableField.bottomAnchor.constraint(equalTo: bottomAnchor),
 		])
 	}
 }
@@ -314,7 +333,7 @@ class DataEntryViewController: UIViewController {
 	
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nil, bundle: nil)
-		configureAutoLayout()
+//		configureAutoLayout()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -325,6 +344,20 @@ class DataEntryViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		view.backgroundColor = .white
+		
+		let v = NewEditableFuelSheetField(titleText: "A. Pre-refuel FOB", textFieldText: "")
+		v.backgroundColor = .red
+		v.clipsToBounds = true
+		view.addSubview(v)
+		v.translatesAutoresizingMaskIntoConstraints = false
+		let g = view.safeAreaLayoutGuide
+		NSLayoutConstraint.activate([
+			v.topAnchor.constraint(equalTo: g.topAnchor, constant: 20.0),
+			v.leadingAnchor.constraint(equalTo: g.leadingAnchor, constant: 20.0),
+			v.trailingAnchor.constraint(equalTo: g.trailingAnchor, constant: -20.0),
+			//v.heightAnchor.constraint(equalToConstant: 100.0),
+		])
+
 	}
 	
 	// MARK:  Properties
